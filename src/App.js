@@ -1,4 +1,4 @@
-import React from "react";
+import React,{Children, useState} from "react";
 import logo from './logo.svg';
 import './App.css';
 
@@ -13,8 +13,11 @@ const users = [
 ];
 
 // comment this out after completion and uncomment code below it to proceed
-function Child() {
-  return <div>This is children content</div>;
+function Child({func}) {
+  return <div>
+    This is children content
+    <button onClick={()=>func('I need to be updated from my child')}>Change</button>
+  </div>;
 }
 /**
   Challenge: Uncomment this code to complete quiz
@@ -51,30 +54,50 @@ Uncomment this to tackle quiz
 **/
 
 // Comment out after completion
-function Parent() {
+function Parent(props) {
+  const [content,setContent] = useState('Parent Component')
+  function changeParent(word){
+    setContent(word)
+  }
+
   return (
     <div>
-      <h3>Parent Component</h3>
+      <h3>{content}</h3>
+      <Child func={changeParent}/>
     </div>
   );
 }
 // Comment above code after completion
 
+
+
+
 function App() {
-  const [] = React.useState(true);
+  const [hide,setHide]=useState(true)
+  const [value,setValue] = useState(logo);
+  function handleImage(){
+    setValue('https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/800px-Manchester_United_FC_crest.svg.png')
+  }
+  const handleHide=()=>{
+    setHide(!hide);
+  }
+  
+  
   return (
-    
     <>
     
-    <img src={logo} className="App-logo" alt="logo" />
+    <img src={value} className="App-logo" alt="logo" />
+    <button onClick={handleImage}>Change Image</button>
       <h3>User names</h3>
-      <ul></ul>
-      <button>Hide Element Below</button>
+      <ul className="user">
+        {
+          users.map((item)=><li key={item.id}>{item.name}</li>)
+        }
+      </ul>
+      <button onClick={handleHide}>Hide Element Below</button>
 
       <div>Toggle Challenge</div>
-      <Parent>
-      <Child />
-    </Parent>
+      {hide?<Parent><Child /></Parent>:null}
     </>
   );
 }
